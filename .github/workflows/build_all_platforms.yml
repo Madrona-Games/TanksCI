@@ -32,13 +32,8 @@ jobs:
             token: ${{ secrets.GH_PAT }}
             repository: Madrona-Games/MadronaGamesActions
 
-      - run: ls -lashi
-        shell: bash
-        
-      - run: pwd
-
       - name: Setup Environment Variables
-        uses: ./get-gameci-build-vars
+        uses: ./get-gameci-prebuild-vars
         with: 
           token: ${{ secrets.GH_PAT }}
           repository: ${{ env.REPO_NAME }}
