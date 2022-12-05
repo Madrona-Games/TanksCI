@@ -1,0 +1,178 @@
+name: Build Tank Tactics for All Release Platforms
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Which environment to deploy to
+        default: 'Tanks-Development'
+      ref:
+        description: 'What ref to checkout. Can be a branch name, tag, or SHA. Uses default branch if not specified'
+        required: false
+
+env:
+  BUILD_NAME: "Tank Tactics"
+  REPO_NAME: "Madrona-Games/Tanks"
+
+jobs:
+  envVarSetup:
+    name: Setup Environment Variables
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    outputs:
+      GITHUB_SHA_SHORT: ${{ steps.envVars.outputs.GITHUB_SHA_SHORT }}
+      BUILD_TIME: ${{ steps.envVars.outputs.BUILD_TIME }}
+      FILE_HASH: ${{ steps.envVars.outputs.FILE_HASH }}
+
+    steps:
+      - name: Get Actions
+        uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.GH_PAT }}
+            repository: Madrona-Games/MadronaGamesActions
+
+      - name: Setup Environment Variables
+        uses: ./get-gameci-build-vars
+        with: 
+          token: ${{ secrets.GH_PAT }}
+          repository: ${{ env.REPO_NAME }}
+          ref: '${{ github.event.inputs.ref }}'
+  
+  buildAndPublishAndroid:
+    name: Build and Publish Android
+    runs-on: windows-2019
+    environment: ${{ github.event.inputs.environment }}
+    needs: envVarSetup
+    #env:
+      # GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+      # GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/google-fastlane.json', github.workspace) }}
+
+    steps:
+      - name: Echo Inputs
+        run: |
+          echo ${{ needs.envVarSetup.outputs.BUILD_TIME }}
+          echo ${{ needs.envVarSetup.outputs.GITHUB_SHA_SHORT }}
+          echo ${{ needs.envVarSetup.outputs.FILE_HASH }}
+      
+      - name: Get Actions
+        uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.GH_PAT }}
+            repository: Madrona-Games/MadronaGamesActions
+
+      - name: Expand Windows Workspace
+        uses: ./expand-windows-workspace
+
+      - name: Build Android
+        uses: ./build-with-gameci
+        id: buildStep
+        with:
+          ref: '${{ github.event.inputs.ref }}'
+          token: ${{ secrets.GH_PAT }}
+          repository: ${{ env.REPO_NAME }}
+          library-hash: ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
+          unity-email: ${{ secrets.UNITY_EMAIL }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          android-keystore-name: ${{ secrets.ANDROID_KEYSTORE_NAME }}
+          android-keystore-base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          android-keystore-pass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          android-keyalias-name: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          android-keyalias-pass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          build-app-bundle: true
+          build-name: ${{ env.BUILD_NAME }}
+          target-platform: Android
+          custom-image: 'madronagames/editor:windows-2022.2.0b12-android'
+
+      - name: Get Post Build Variables
+        uses: ./get-gameci-postbuild-vars
+        id: postBuildVars
+        with:
+          build-path: 'build/android'
+          build-version: ${{ steps.buildStep.outputs.buildVersion }}
+          android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
+          build-name: ${{ env.BUILD_NAME }}
+          build-time: ${{ needs.envVarSetup.outputs.build-time }}
+          github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
+
+      # - name: Archive Build
+
+      - name: Upload build to App Center
+        if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
+        uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
+        with:
+          appName: "${{ secrets.APP_CENTER_APP_NAME }}"
+          token: ${{ secrets.APP_CENTER_API_KEY }}
+          group: "Internal"
+          file: "build/android/${{ env.BUILD_NAME }}.aab"
+          gitReleaseNotes: true
+          notifyTesters: true
+          symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
+          symbolType: breakpad
+          buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+          androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
+          mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
+
+  buildAndPublishIOS:
+    name: Build and Publish IOS
+    runs-on: macos-latest
+    environment: ${{ github.event.inputs.environment }}
+    needs: envVarSetup
+
+    steps:
+      - name: Echo Inputs
+        run: |
+          echo ${{ needs.envVarSetup.outputs.BUILD_TIME }}
+          echo ${{ needs.envVarSetup.outputs.GITHUB_SHA_SHORT }}
+          echo ${{ needs.envVarSetup.outputs.FILE_HASH }}
+      
+      - name: Get Actions
+        uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.GH_PAT }}
+            repository: Madrona-Games/MadronaGamesActions
+
+      - name: Build iOS
+        uses: ./build-with-gameci
+        id: buildStep
+        with:
+          ref: '${{ github.event.inputs.ref }}'
+          token: ${{ secrets.GH_PAT }}
+          repository: ${{ env.REPO_NAME }}
+          library-hash: ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
+          unity-email: ${{ secrets.UNITY_EMAIL }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          build-app-bundle: true
+          build-name: ${{ env.BUILD_NAME }}
+          target-platform: iOS
+          custom-image: 'madronagames/editor:windows-2022.2.0b12-ios'
+
+      # - name: Get Post Build Variables
+      #   uses: ./get-gameci-postbuild-vars
+      #   id: postBuildVars
+      #   with:
+      #     build-path: 'build/iOS'
+      #     build-version: ${{ steps.buildStep.outputs.buildVersion }}
+      #     build-name: ${{ env.BUILD_NAME }}
+      #     build-time: ${{ needs.envVarSetup.outputs.build-time }}
+      #     github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
+
+      # # - name: Archive Build
+
+      # - name: Upload build to App Center
+      #   if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
+      #   uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
+      #   with:
+      #     appName: "${{ secrets.APP_CENTER_APP_NAME }}"
+      #     token: ${{ secrets.APP_CENTER_API_KEY }}
+      #     group: "Internal"
+      #     file: "build/iOS/${{ env.BUILD_NAME }}.aab"
+      #     gitReleaseNotes: true
+      #     notifyTesters: true
+      #     symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
+      #     symbolType: breakpad
+      #     buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+      #     androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
+      #     mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
