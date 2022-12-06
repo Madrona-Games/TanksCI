@@ -90,7 +90,7 @@ jobs:
         uses: ./get-gameci-postbuild-vars
         id: postBuildVars
         with:
-          build-path: 'build/android'
+          build-path: 'build/Android'
           build-version: ${{ steps.buildStep.outputs.buildVersion }}
           android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
           build-name: ${{ env.BUILD_NAME }}
