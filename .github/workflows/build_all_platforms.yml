@@ -21,9 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     outputs:
-      GITHUB_SHA_SHORT: ${{ steps.envVars.outputs.GITHUB_SHA_SHORT }}
-      BUILD_TIME: ${{ steps.envVars.outputs.BUILD_TIME }}
-      FILE_HASH: ${{ steps.envVars.outputs.FILE_HASH }}
+      github-sha-short: ${{ steps.envVars.outputs.github-sha-short }}
+      build-time: ${{ steps.envVars.outputs.build-time }}
+      library-hash: ${{ steps.envVars.outputs.library-hash }}
 
     steps:
       - name: Get Actions
@@ -34,6 +34,7 @@ jobs:
 
       - name: Setup Environment Variables
         uses: ./get-gameci-prebuild-vars
+        id: envVars
         with: 
           token: ${{ secrets.GH_PAT }}
           repository: ${{ env.REPO_NAME }}
@@ -57,9 +58,9 @@ jobs:
     steps:
       - name: Echo Inputs
         run: |
-          echo ${{ needs.envVarSetup.outputs.BUILD_TIME }}
-          echo ${{ needs.envVarSetup.outputs.GITHUB_SHA_SHORT }}
-          echo ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          echo ${{ needs.envVarSetup.outputs.build-time }}
+          echo ${{ needs.envVarSetup.outputs.github-sha-short }}
+          echo ${{ needs.envVarSetup.outputs.library-hash }}
       
       - name: Get Actions
         uses: actions/checkout@v3
@@ -77,7 +78,7 @@ jobs:
           ref: '${{ github.event.inputs.ref }}'
           token: ${{ secrets.GH_PAT }}
           repository: ${{ env.REPO_NAME }}
-          library-hash: ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          library-hash: ${{ needs.envVarSetup.outputs.library-hash }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
           unity-email: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
@@ -135,9 +136,9 @@ jobs:
     steps:
       - name: Echo Inputs
         run: |
-          echo ${{ needs.envVarSetup.outputs.BUILD_TIME }}
-          echo ${{ needs.envVarSetup.outputs.GITHUB_SHA_SHORT }}
-          echo ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          echo ${{ needs.envVarSetup.outputs.build-time }}
+          echo ${{ needs.envVarSetup.outputs.github-sha-short }}
+          echo ${{ needs.envVarSetup.outputs.library-hash }}
       
       - name: Get Actions
         uses: actions/checkout@v3
@@ -152,7 +153,7 @@ jobs:
           ref: '${{ github.event.inputs.ref }}'
           token: ${{ secrets.GH_PAT }}
           repository: ${{ env.REPO_NAME }}
-          library-hash: ${{ needs.envVarSetup.outputs.FILE_HASH }}
+          library-hash: ${{ needs.envVarSetup.outputs.library-hash }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
           unity-email: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
