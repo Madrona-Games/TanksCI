@@ -90,7 +90,7 @@ jobs:
         uses: ./get-gameci-postbuild-vars
         id: postBuildVars
         with:
-          build-path: 'build/Android'
+          build-path: ${{ steps.buildStep.outputs.build-path }}
           build-version: ${{ steps.buildStep.outputs.buildVersion }}
           android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
           build-name: ${{ env.BUILD_NAME }}
@@ -154,7 +154,7 @@ jobs:
       #   uses: ./get-gameci-postbuild-vars
       #   id: postBuildVars
       #   with:
-      #     build-path: 'build/iOS'
+      #     build-path: ${{ steps.buildStep.outputs.build-path }}
       #     build-version: ${{ steps.buildStep.outputs.buildVersion }}
       #     build-name: ${{ env.BUILD_NAME }}
       #     build-time: ${{ needs.envVarSetup.outputs.build-time }}
