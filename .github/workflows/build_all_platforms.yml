@@ -38,7 +38,12 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           repository: ${{ env.REPO_NAME }}
           ref: '${{ github.event.inputs.ref }}'
-  
+
+      # Remind Actions of original repo
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+    
   buildAndPublishAndroid:
     name: Build and Publish Android
     runs-on: windows-2019
