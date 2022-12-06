@@ -106,7 +106,7 @@ jobs:
           appName: "${{ secrets.APP_CENTER_APP_NAME }}"
           token: ${{ secrets.APP_CENTER_API_KEY }}
           group: "Internal"
-          file: "build/android/${{ env.BUILD_NAME }}.aab"
+          file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
           gitReleaseNotes: true
           notifyTesters: true
           symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
