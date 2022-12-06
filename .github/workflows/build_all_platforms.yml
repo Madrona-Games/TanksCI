@@ -115,12 +115,6 @@ jobs:
           androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
           mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
 
-      # Remind Actions of original repo
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GH_PAT }}
-          repository: Madrona-Games/MadronaGamesActions
-
   buildAndPublishIOS:
     name: Build and Publish IOS
     runs-on: macos-latest
@@ -184,8 +178,3 @@ jobs:
       #     androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
       #     mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
 
-      # Remind Actions of original repo
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GH_PAT }}
-          repository: Madrona-Games/MadronaGamesActions
