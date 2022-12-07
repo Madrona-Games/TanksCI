@@ -86,34 +86,34 @@ jobs:
           target-platform: Android
           custom-image: 'madronagames/editor:windows-2022.2.0b12-android'
 
-      - name: Get Post Build Variables
-        uses: ./get-gameci-postbuild-vars
-        id: postBuildVars
-        with:
-          build-path: ${{ steps.buildStep.outputs.build-path }}
-          build-version: ${{ steps.buildStep.outputs.buildVersion }}
-          android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
-          build-name: ${{ env.BUILD_NAME }}
-          build-time: ${{ needs.envVarSetup.outputs.build-time }}
-          github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
+      # - name: Get Post Build Variables
+      #   uses: ./get-gameci-postbuild-vars
+      #   id: postBuildVars
+      #   with:
+      #     build-path: ${{ steps.buildStep.outputs.build-path }}
+      #     build-version: ${{ steps.buildStep.outputs.buildVersion }}
+      #     android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
+      #     build-name: ${{ env.BUILD_NAME }}
+      #     build-time: ${{ needs.envVarSetup.outputs.build-time }}
+      #     github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
 
       # - name: Archive Build
 
-      - name: Upload build to App Center
-        if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
-        uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
-        with:
-          appName: "${{ secrets.APP_CENTER_APP_NAME }}"
-          token: ${{ secrets.APP_CENTER_API_KEY }}
-          group: "Internal"
-          file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
-          gitReleaseNotes: true
-          notifyTesters: true
-          symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
-          symbolType: breakpad
-          buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
-          androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
-          mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
+      # - name: Upload build to App Center
+      #   if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
+      #   uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
+      #   with:
+      #     appName: "${{ secrets.APP_CENTER_APP_NAME }}"
+      #     token: ${{ secrets.APP_CENTER_API_KEY }}
+      #     group: "Internal"
+      #     file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
+      #     gitReleaseNotes: true
+      #     notifyTesters: true
+      #     symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
+      #     symbolType: breakpad
+      #     buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+      #     androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
+      #     mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
 
   buildAndPublishIOS:
     name: Build and Publish IOS
