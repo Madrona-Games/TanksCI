@@ -150,15 +150,15 @@ jobs:
           target-platform: iOS
           custom-image: 'madronagames/editor:windows-2022.2.0b12-ios'
 
-      # - name: Get Post Build Variables
-      #   uses: ./get-gameci-postbuild-vars
-      #   id: postBuildVars
-      #   with:
-      #     build-path: ${{ steps.buildStep.outputs.build-path }}
-      #     build-version: ${{ steps.buildStep.outputs.buildVersion }}
-      #     build-name: ${{ env.BUILD_NAME }}
-      #     build-time: ${{ needs.envVarSetup.outputs.build-time }}
-      #     github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
+      - name: Get Post Build Variables
+        uses: ./get-gameci-postbuild-vars
+        id: postBuildVars
+        with:
+          build-path: ${{ steps.buildStep.outputs.build-path }}
+          build-version: ${{ steps.buildStep.outputs.buildVersion }}
+          build-name: ${{ env.BUILD_NAME }}
+          build-time: ${{ needs.envVarSetup.outputs.build-time }}
+          github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
 
       # # - name: Archive Build
 
