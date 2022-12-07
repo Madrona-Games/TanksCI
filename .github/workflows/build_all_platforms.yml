@@ -86,16 +86,16 @@ jobs:
           target-platform: Android
           custom-image: 'madronagames/editor:windows-2022.2.0b12-android'
 
-      # - name: Get Post Build Variables
-      #   uses: ./get-gameci-postbuild-vars
-      #   id: postBuildVars
-      #   with:
-      #     build-path: ${{ steps.buildStep.outputs.build-path }}
-      #     build-version: ${{ steps.buildStep.outputs.buildVersion }}
-      #     android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
-      #     build-name: ${{ env.BUILD_NAME }}
-      #     build-time: ${{ needs.envVarSetup.outputs.build-time }}
-      #     github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
+      - name: Get Post Build Variables
+        uses: ./get-gameci-postbuild-vars
+        id: postBuildVars
+        with:
+          build-path: ${{ steps.buildStep.outputs.build-path }}
+          build-version: ${{ steps.buildStep.outputs.buildVersion }}
+          android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
+          build-name: ${{ env.BUILD_NAME }}
+          build-time: ${{ needs.envVarSetup.outputs.build-time }}
+          github-sha-short: ${{ needs.envVarSetup.outputs.github-sha-short }}
 
       # - name: Archive Build
 
