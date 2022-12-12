@@ -100,11 +100,6 @@ jobs:
 
       # - name: Archive Build
 
-      - run: |
-          pwd
-          ls -lashi
-        shell: bash
-
       - name: Upload build to App Center
         if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
         uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
