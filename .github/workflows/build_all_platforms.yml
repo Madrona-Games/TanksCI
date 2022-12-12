@@ -50,12 +50,6 @@ jobs:
       # GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/google-fastlane.json', github.workspace) }}
 
     steps:
-      - name: Echo Inputs
-        run: |
-          echo ${{ needs.envVarSetup.outputs.build-time }}
-          echo ${{ needs.envVarSetup.outputs.github-sha-short }}
-          echo ${{ needs.envVarSetup.outputs.library-hash }}
-      
       - name: Get Actions
         uses: actions/checkout@v3
         with:
@@ -124,12 +118,6 @@ jobs:
     needs: envVarSetup
 
     steps:
-      - name: Echo Inputs
-        run: |
-          echo ${{ needs.envVarSetup.outputs.build-time }}
-          echo ${{ needs.envVarSetup.outputs.github-sha-short }}
-          echo ${{ needs.envVarSetup.outputs.library-hash }}
-      
       - name: Get Actions
         uses: actions/checkout@v3
         with:
