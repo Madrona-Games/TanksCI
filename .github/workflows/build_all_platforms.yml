@@ -84,7 +84,7 @@ jobs:
           build-app-bundle: true
           build-name: ${{ env.BUILD_NAME }}
           target-platform: Android
-          custom-image: 'madronagames/editor:windows-2022.2.0b12-android'
+          custom-image: 'madronagames/editor:windows-2022.2.0f1-android'
 
       - name: Get Post Build Variables
         uses: ./get-gameci-postbuild-vars
@@ -150,7 +150,7 @@ jobs:
           build-app-bundle: true
           build-name: ${{ env.BUILD_NAME }}
           target-platform: iOS
-          custom-image: 'madronagames/editor:windows-2022.2.0b12-ios'
+          custom-image: 'madronagames/editor:windows-2022.2.0f1-ios'
 
       - name: Get Post Build Variables
         uses: ./get-gameci-postbuild-vars
