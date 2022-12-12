@@ -100,6 +100,10 @@ jobs:
 
       # - name: Archive Build
 
+      - run: |
+        pwd
+        ls -lashi
+
       - name: Upload build to App Center
         if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
         uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
@@ -109,6 +113,7 @@ jobs:
           group: "Internal"
           file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
           gitReleaseNotes: true
+          gitDirectory: project
           notifyTesters: true
           symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
           symbolType: breakpad
