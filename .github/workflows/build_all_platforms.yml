@@ -113,8 +113,8 @@ jobs:
           notifyTesters: true
           symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
           symbolType: breakpad
-          buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
-          androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
+          buildVersion: ${{ steps.buildStep.outputs.build-version }}
+          androidVersionCode: ${{ steps.buildStep.outputs.android-version-code }}
           mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
 
   buildAndPublishIOS:
