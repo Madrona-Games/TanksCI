@@ -101,8 +101,8 @@ jobs:
       # - name: Archive Build
 
       - run: |
-        pwd
-        ls -lashi
+          pwd
+          ls -lashi
 
       - name: Upload build to App Center
         if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
