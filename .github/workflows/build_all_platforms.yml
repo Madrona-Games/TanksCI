@@ -103,6 +103,7 @@ jobs:
       - run: |
           pwd
           ls -lashi
+        shell: bash
 
       - name: Upload build to App Center
         if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
