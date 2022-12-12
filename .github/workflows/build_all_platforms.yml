@@ -100,21 +100,21 @@ jobs:
 
       # - name: Archive Build
 
-      # - name: Upload build to App Center
-      #   if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
-      #   uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
-      #   with:
-      #     appName: "${{ secrets.APP_CENTER_APP_NAME }}"
-      #     token: ${{ secrets.APP_CENTER_API_KEY }}
-      #     group: "Internal"
-      #     file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
-      #     gitReleaseNotes: true
-      #     notifyTesters: true
-      #     symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
-      #     symbolType: breakpad
-      #     buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
-      #     androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
-      #     mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
+      - name: Upload build to App Center
+        if: ${{ github.event.inputs.environment == 'Tanks-Development' }}
+        uses: Madrona-Games/MicrosoftAppCenterActions/upload-build@v1
+        with:
+          appName: "${{ secrets.APP_CENTER_APP_NAME }}"
+          token: ${{ secrets.APP_CENTER_API_KEY }}
+          group: "Internal"
+          file: "${{ steps.buildStep.outputs.build-path }}/${{ env.BUILD_NAME }}.aab"
+          gitReleaseNotes: true
+          notifyTesters: true
+          symbolPath: "${{ steps.postBuildVars.outputs.symbol-path }}"
+          symbolType: breakpad
+          buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+          androidVersionCode: ${{ steps.buildStep.outputs.androidVersionCode }}
+          mappingFilePath: "${{ steps.postBuildVars.outputs.mapping-file-path }}"
 
   buildAndPublishIOS:
     name: Build and Publish IOS
