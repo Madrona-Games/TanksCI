@@ -74,14 +74,14 @@ jobs:
           android-keyalias-pass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           build-app-bundle: true
           build-name: ${{ env.BUILD_NAME }}
-          target-platform: android
+          target-platform: Android
           custom-image: 'madronagames/editor:windows-2022.2.0f1-android'
 
       - name: Get Post Build Variables
         uses: ./get-gameci-postbuild-vars
         id: postBuildVars
         with:
-          target-platform: android
+          target-platform: Android
           build-path: ${{ steps.buildStep.outputs.build-path }}
           build-version: ${{ steps.buildStep.outputs.buildVersion }}
           android-version-code: ${{ steps.buildStep.outputs.androidVersionCode }}
