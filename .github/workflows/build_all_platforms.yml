@@ -42,7 +42,7 @@ jobs:
 
   buildAndPublishAndroid:
     name: Build and Publish Android
-    runs-on: windows-2019
+    runs-on: macos-latest
     environment: ${{ github.event.inputs.environment }}
     needs: envVarSetup
     #env:
@@ -55,9 +55,6 @@ jobs:
         with:
             token: ${{ secrets.GH_PAT }}
             repository: Madrona-Games/MadronaGamesActions
-
-      - name: Expand Windows Workspace
-        uses: ./expand-windows-workspace
 
       - name: Build Android
         uses: ./build-with-gameci
